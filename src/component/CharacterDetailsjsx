@@ -1,0 +1,111 @@
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useFavorites } from '../context/FavoritesContext';
+import { getEpisodeDetails } from '../services/api';
+import { STATUS_COLORS, STATUS_LABELS } from '../utils/constants';
+import './CharacterDetail.css';
+
+const CharacterDetail = ({ character }) => {
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const [episodes, setEpisodes] = useState([]);
+  const [loadingEpisodes, setLoadingEpisodes] = useState(true);
+
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      try {
+        setLoadingEpisodes(true);
+        const episodePromises = character.episode
+          .slice(0, 10)
+          .map(url => getEpisodeDetails(url));
+        
+        const episodeData = await Promise.all(episodePromises);
+        setEpisodes(episodeData);
+      } catch (error) {
+        console.error('Error fetching episodes:', error);
+      } finally {
+        setLoadingEpisodes(false);
+      }
+    };
+
+    if (character.episode?.length > 0) {
+      fetchEpisodes();
+    }
+  }, [character]);
+
+  return (
+    <div className="character-detail">
+      <div className="detail-header">
+        <div className="character-image-container">
+          <img src={character.image} alt={character.name} className="detail-image" />
+          <button
+            onClick={() => toggleFavorite(character)}
+            className={`favorite-toggle ${isFavorite(character.id) ? 'active' : ''}`}
+            aria-label={isFavorite(character.id) ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            {isFavorite(character.id) ? '★ Favorito' : '☆ Agregar a favoritos'}
+          </button>
+        </div>
+        
+        <div className="character-basic-info">
+          <h1 className="detail-name">{character.name}</h1>
+          
+          <div className="status-info">
+            <div className="status-badge" style={{ backgroundColor: STATUS_COLORS[character.status] }}>
+              {STATUS_LABELS[character.status]} - {character.species}
+            </div>
+            {character.type && (
+              <div className="type-info">
+                <strong>Tipo:</strong> {character.type}
+              </div>
+            )}
+            <div className="gender-info">
+              <strong>Género:</strong> {character.gender}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="detail-content">
+        <div className="location-info">
+          <div className="info-card">
+            <h3>Origen</h3>
+            <p>{character.origin.name}</p>
+          </div>
+          
+          <div className="info-card">
+            <h3>Última ubicación</h3>
+            <p>{character.location.name}</p>
+          </div>
+        </div>
+        
+        <div className="episodes-section">
+          <h2>Episodios ({character.episode.length})</h2>
+          {loadingEpisodes ? (
+            <div className="loading-episodes">Cargando episodios...</div>
+          ) : (
+            <div className="episodes-grid">
+              {episodes.map((episode) => (
+                <div key={episode.id} className="episode-card">
+                  <div className="episode-code">{episode.episode}</div>
+                  <h4 className="episode-name">{episode.name}</h4>
+                  <p className="episode-air-date">{episode.air_date}</p>
+                </div>
+              ))}
+              {character.episode.length > 10 && (
+                <div className="more-episodes">
+                  Y {character.episode.length - 10} episodios más...
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+CharacterDetail.propTypes = {
+  character: PropTypes.object.isRequired,
+};
+
+export default CharacterDetail;
