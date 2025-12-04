@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../context/FavoritesContext';
-import { STATUS_COLORS, STATUS_LABELS } from '../utils/constants';
+import { STATUS_COLORS, STATUS_LABELS } from '../utils/constants.js';
 import './CharacterCard.css';
 
 const CharacterCard = ({ character }) => {

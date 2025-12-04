@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getCharacters } from '../services/api';
-import { DEBOUNCE_DELAY } from '../utils/constants';
+import { DEBOUNCE_DELAY } from '../utils/constants.js';
 
 export const useCharacters = (page = 1, searchQuery = '') => {
   const [characters, setCharacters] = useState([]);

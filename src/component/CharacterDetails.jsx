@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useFavorites } from '../context/FavoritesContext';
 import { getEpisodeDetails } from '../services/api';
-import { STATUS_COLORS, STATUS_LABELS } from '../utils/constants';
-import './CharacterDetail.css';
+import { STATUS_COLORS, STATUS_LABELS } from '../utils/constants.js';
+import './CharacterDetails.css';
 
 const CharacterDetail = ({ character }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
