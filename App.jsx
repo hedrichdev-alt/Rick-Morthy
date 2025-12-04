@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { FavoritesProvider } from './context/FavoritesContext';
-import Header from './components/Header';
-import Home from './pages/Home';
-import CharacterDetailPage from './pages/CharacterDetailPage';
-import FavoritesPage from './pages/FavoritesPage';
-import './styles/App.css';
+import { FavoritesProvider } from './src/context/FavoritesContext';
+import Header from './src/component/Header';
+import Home from './src/pages/home';
+import CharacterDetailPage from './src/pages/CharacterDetailpage';
+import FavoritesPage from './src/pages/FavoritesPage';
+import './src/styles/App.css';
 
 function App() {
   return (
